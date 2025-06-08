@@ -1,0 +1,8 @@
+{
+  "name": "Nutria Health App",
+  "description": "A multi-step sign-up and sign-in application for Nutria, a health and fitness platform. Features theme awareness and detailed user information collection.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "prompt": ""
+}
