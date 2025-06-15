@@ -1,3 +1,4 @@
+// --- START OF FILE screens/steps/Step3HealthInfo.tsx ---
 
 import React, { useState } from 'react';
 import { Input } from '../../components/Input';
@@ -5,27 +6,15 @@ import { Button } from '../../components/Button';
 import { Select } from '../../components/Select';
 import { RadioCard } from '../../components/RadioCard';
 import { useSignUpForm } from '../../contexts/SignUpContext';
-import { DIET_PREFERENCES, ACTIVITY_LEVELS, PRIMARY_COLOR_CLASS, ACCENT_COLOR_CLASS } from '../../constants';
+import { DIET_PREFERENCES, ACTIVITY_LEVELS, PRIMARY_COLOR_CLASS } from '../../constants';
 import { StepWrapper } from '../../components/StepWrapper';
+
+// FIX: Using the correct 'Mars' and 'Venus' icons from lucide-react
+import { Mars, Venus } from 'lucide-react';
 
 interface Step3HealthInfoProps {
   onNext: () => void;
 }
-
-const MaleIcon: React.FC<{className?: string}> = ({className}) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className || "w-6 h-6"}>
-    <path fillRule="evenodd" d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 5.69 3.117L12 21.75l-5.69-6.633Z" clipRule="evenodd" />
-     <path d="M12 12.75a.75.75 0 0 0 0 1.5h.008a.75.75 0 0 0 0-1.5H12Zm-.832 4.501a11.196 11.196 0 0 1-4.043-2.116l.07-.044a9.67 9.67 0 0 0 3.973 2.16ZM12.832 17.25a11.196 11.196 0 0 0 4.043-2.116l-.07-.044a9.67 9.67 0 0 1-3.973 2.16Z" />
-  </svg>
-);
-
-const FemaleIcon: React.FC<{className?: string}> = ({className}) => (
- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className || "w-6 h-6"}>
-    <path fillRule="evenodd" d="M11.47 2.47a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1-1.06 1.06l-2.47-2.47V10.5a.75.75 0 0 1-1.5 0V4.81L8.78 7.28a.75.75 0 0 1-1.06-1.06l3.75-3.75ZM12 14.25a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Z" clipRule="evenodd" />
-     <path d="M12 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
-  </svg>
-);
-
 
 export const Step3HealthInfo: React.FC<Step3HealthInfoProps> = ({ onNext }) => {
   const { formData, updateFormData } = useSignUpForm();
@@ -130,7 +119,7 @@ export const Step3HealthInfo: React.FC<Step3HealthInfoProps> = ({ onNext }) => {
             name="gender"
             value="male"
             label="Male"
-            icon={<MaleIcon className={`w-6 h-6 text-${PRIMARY_COLOR_CLASS}-500 dark:text-${PRIMARY_COLOR_CLASS}-400`} />}
+            icon={<Mars className={`w-6 h-6 text-${PRIMARY_COLOR_CLASS}-500 dark:text-${PRIMARY_COLOR_CLASS}-400`} />}
             checked={formData.gender === 'male'}
             onChange={handleGenderChange}
           />
@@ -139,7 +128,7 @@ export const Step3HealthInfo: React.FC<Step3HealthInfoProps> = ({ onNext }) => {
             name="gender"
             value="female"
             label="Female"
-            icon={<FemaleIcon className={`w-6 h-6 text-coral-500 dark:text-coral-400`} />}
+            icon={<Venus className={`w-6 h-6 text-coral-500 dark:text-coral-400`} />}
             checked={formData.gender === 'female'}
             onChange={handleGenderChange}
           />
@@ -153,3 +142,5 @@ export const Step3HealthInfo: React.FC<Step3HealthInfoProps> = ({ onNext }) => {
     </StepWrapper>
   );
 };
+
+// --- END OF FILE screens/steps/Step3HealthInfo.tsx ---

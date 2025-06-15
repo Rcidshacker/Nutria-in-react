@@ -19,7 +19,7 @@ export interface SignUpFormData {
   healthCondition: 'diabetic' | 'pcod-pcos' | 'thyroid' | '';
   diabeticStatus?: 'controlled' | 'uncontrolled' | '';
   pcodSeverity?: 'mild' | 'moderate' | 'severe' | '';
-  plan: 'free' | 'premium' | '';
+  plan: 'nutria';
   upiId?: string;
   cardNumber?: string;
   cardExpiry?: string; // MM/YY
@@ -54,7 +54,7 @@ export interface SignUpFormData {
 export type SignUpStep = number; // Changed to number for flexibility
 
 export interface Plan {
-  id: 'free' | 'premium';
+  id: 'nutria';
   name: string;
   price?: string;
   features: string[];
@@ -228,4 +228,39 @@ export interface PaymentOptionType {
   id: PaymentMethod; // Re-use PaymentMethod for consistency
   label: string;
   icon: React.FC<{ className?: string }>;
+}
+
+// --- START: New Types for Meal Scan (OCV) Screen ---
+
+export interface OCVNutrients {
+  protein: string;
+  fat: string;
+  carbs: string;
+  calories: string;
+}
+
+export interface OCVAnalysisResult {
+  dishName: string;
+  quantity: string;
+  portionSize: string;
+  nutrients: OCVNutrients;
+  ingredients: string;
+  confidence: number;
+}
+
+export interface OCVSmartSuggestion {
+  type: 'positive' | 'warning' | 'negative';
+  text: string;
+  icon: string; // Emoji
+}
+
+// --- END: New Types for Meal Scan (OCV) Screen ---
+// --- Types for Blog Screen ---
+export interface BlogPost {
+  id: string;
+  title: string;
+  author: string;
+  date: string;
+  imageUrl: string;
+  excerpt: string;
 }

@@ -1,19 +1,14 @@
+// --- START OF FILE screens/AnalysisScreen.tsx ---
 
-import React, { useState } from 'react';
+import React from 'react';
 import { ProgressCircle } from '../components/ProgressCircle';
 import { Button } from '../components/Button';
-import { Input } from '../components/Input';
 import { TodayProgressData, WeeklyProgressData, DailyCalorieLog, WeightPoint, AppRoute } from '../types';
 import { PRIMARY_COLOR_CLASS, ACCENT_COLOR_CLASS } from '../constants';
-import { useTheme } from '../contexts/ThemeContext'; // For theme-aware chart colors
+import { useTheme } from '../contexts/ThemeContext';
+import { Activity } from 'lucide-react'; // UPDATED: Import new icon
 
-// --- Icons (ensure these are defined or imported) ---
-const ChartLineIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-        <use href="#icon-chart-line"></use>
-    </svg>
-);
-
+// DELETED: The old ChartLineIcon component is removed.
 
 // --- Mock Data ---
 const mockTodayProgress: TodayProgressData = {
@@ -38,7 +33,7 @@ const mockWeightLog: WeightPoint[] = [
   { date: 'Jul 22', weight: 69.5 },
   { date: 'Jul 29', weight: 69.2 },
 ];
-const currentWeight = mockWeightLog.length > 0 ? mockWeightLog[mockWeightLog.length -1].weight : 0;
+const currentWeight = mockWeightLog.length > 0 ? mockWeightLog[mockWeightLog.length - 1].weight : 0;
 const weightGoal = 65;
 
 const mockDailyCalories: DailyCalorieLog[] = [
@@ -62,14 +57,13 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ navigateTo }) =>
   const chartLineColor = theme === 'dark' ? '#6B8E23' : '#6B8E23'; 
   const chartBarColor = chartLineColor;
 
-
   const WeightChart: React.FC<{ data: WeightPoint[] }> = ({ data }) => {
     if (!data || data.length < 2) return <p className="text-center text-gray-500 dark:text-gray-400">Not enough data for chart.</p>;
 
     const width = 300; const height = 150; const padding = 30;
     const minWeight = Math.min(...data.map(p => p.weight)) - 1;
     const maxWeight = Math.max(...data.map(p => p.weight)) + 1;
-    const weightRange = maxWeight - minWeight || 1; // Prevent division by zero
+    const weightRange = maxWeight - minWeight || 1;
 
     const points = data.map((point, i) => {
       const x = (data.length > 1 ? (width - 2 * padding) / (data.length - 1) * i : (width - 2 * padding) / 2) + padding;
@@ -97,7 +91,6 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ navigateTo }) =>
         </>
       );
     };
-
 
     return (
       <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto">
@@ -176,7 +169,10 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ navigateTo }) =>
 
   return (
     <div className="p-4 sm:p-6 max-w-screen-lg mx-auto pb-20 space-y-8">
-      <h1 className="text-3xl font-bold text-gray-800 dark:text-white text-center">Nutritional Analysis</h1>
+      <h1 className="text-3xl font-bold text-gray-800 dark:text-white text-center flex items-center justify-center">
+        <Activity className="w-8 h-8 mr-3 text-melon-500"/>
+        Nutritional Analysis
+      </h1>
 
       <section className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg transform transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1">
         <h2 className={`text-xl font-semibold text-${PRIMARY_COLOR_CLASS}-700 dark:text-${PRIMARY_COLOR_CLASS}-400 mb-4`}>Today's Progress</h2>
@@ -249,3 +245,6 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ navigateTo }) =>
     </div>
   );
 };
+
+
+// --- END OF FILE screens/AnalysisScreen.tsx ---

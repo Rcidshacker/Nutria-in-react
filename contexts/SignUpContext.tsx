@@ -1,3 +1,4 @@
+// --- START OF FILE contexts/SignUpContext.tsx ---
 
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { SignUpFormData } from '../types';
@@ -22,7 +23,8 @@ const initialFormData: SignUpFormData = {
   gender: '',
   fitnessGoal: '',
   healthCondition: '',
-  plan: 'free',
+  // FIX: Changed default plan from 'free' to 'nutria' to match the type definition
+  plan: 'nutria',
 };
 
 const SignUpContext = createContext<SignUpContextType | undefined>(undefined);
@@ -52,4 +54,5 @@ export const useSignUpForm = (): SignUpContextType => {
   }
   return context;
 };
-    
+
+// --- END OF FILE contexts/SignUpContext.tsx ---

@@ -1,7 +1,12 @@
-import React, { useState, useMemo } from 'react';
+// --- START OF FILE screens/profile/BMICalculatorScreen.tsx ---
+
+import React, { useState } from 'react';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { PRIMARY_COLOR_CLASS } from '../../constants';
+import { Calculator } from 'lucide-react'; // UPDATED: Import icon
+
+// DELETED: Manual BMICalculatorIcon component is no longer needed.
 
 export const BMICalculatorScreen: React.FC = () => {
   const [heightCm, setHeightCm] = useState<string>('');
@@ -22,7 +27,7 @@ export const BMICalculatorScreen: React.FC = () => {
     const bmiFixed = bmi.toFixed(1);
     
     let category = '';
-    let color = PRIMARY_COLOR_CLASS; // Default to primary color (Normal)
+    let color = PRIMARY_COLOR_CLASS;
 
     if (bmi < 18.5) { category = 'Underweight'; color = 'blue'; }
     else if (bmi < 24.9) { category = 'Normal weight'; color = PRIMARY_COLOR_CLASS; }
@@ -32,18 +37,20 @@ export const BMICalculatorScreen: React.FC = () => {
     setBmiResult({ value: bmiFixed, category, color });
   };
   
-  // Tailwind color utility classes. These should align with colors defined in index.html or tailwind.config.js
   const colorClasses: Record<string, { text: string, bg: string, border: string }> = {
-      [PRIMARY_COLOR_CLASS]: { text: `text-${PRIMARY_COLOR_CLASS}-600 dark:text-${PRIMARY_COLOR_CLASS}-400`, bg: `bg-${PRIMARY_COLOR_CLASS}-100 dark:bg-${PRIMARY_COLOR_CLASS}-700`, border: `border-${PRIMARY_COLOR_CLASS}-500` },
-      blue: { text: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-100 dark:bg-blue-700', border: 'border-blue-500' },
-      orange: { text: 'text-orange-600 dark:text-orange-400', bg: 'bg-orange-100 dark:bg-orange-700', border: 'border-orange-500' },
-      red: { text: 'text-red-600 dark:text-red-400', bg: 'bg-red-100 dark:bg-red-700', border: 'border-red-500' },
+      [PRIMARY_COLOR_CLASS]: { text: `text-${PRIMARY_COLOR_CLASS}-600 dark:text-${PRIMARY_COLOR_CLASS}-400`, bg: `bg-${PRIMARY_COLOR_CLASS}-100 dark:bg-${PRIMARY_COLOR_CLASS}-900/50`, border: `border-${PRIMARY_COLOR_CLASS}-500` },
+      blue: { text: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-100 dark:bg-blue-900/50', border: 'border-blue-500' },
+      orange: { text: 'text-orange-600 dark:text-orange-400', bg: 'bg-orange-100 dark:bg-orange-900/50', border: 'border-orange-500' },
+      red: { text: 'text-red-600 dark:text-red-400', bg: 'bg-red-100 dark:bg-red-900/50', border: 'border-red-500' },
       gray: { text: 'text-gray-600 dark:text-gray-400', bg: 'bg-gray-100 dark:bg-gray-700', border: 'border-gray-500' },
   };
 
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6">BMI Calculator</h2>
+      <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6 flex items-center">
+        <Calculator className={`w-6 h-6 mr-3 text-${PRIMARY_COLOR_CLASS}-500`} />
+        BMI Calculator
+      </h2>
       
       <div className="space-y-4 mb-6">
         <Input
@@ -89,3 +96,6 @@ export const BMICalculatorScreen: React.FC = () => {
     </div>
   );
 };
+
+
+// --- END OF FILE screens/profile/BMICalculatorScreen.tsx ---

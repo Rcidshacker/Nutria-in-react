@@ -1,3 +1,4 @@
+// --- START OF FILE screens/profile/NutritionInfoScreen.tsx ---
 
 import React, { useState } from 'react';
 import { Input } from '../../components/Input';
@@ -17,8 +18,6 @@ export const NutritionInfoScreen: React.FC = () => {
     { value: 'balanced', label: 'Balanced Diet' },
     { value: 'low-carb', label: 'Low Carb' },
     { value: 'high-protein', label: 'High Protein' },
-    { value: 'keto', label: 'Ketogenic Diet (Premium Feature)' },
-    { value: 'vegan', label: 'Vegan Meal Plan (Premium Feature)' }
   ];
   const [currentDietPlan, setCurrentDietPlan] = useState(formData.fitnessGoal === 'fat-loss' ? 'low-carb' : 'balanced');
 
@@ -38,7 +37,6 @@ export const NutritionInfoScreen: React.FC = () => {
   const selectedPlanDetails = PLANS.find(p => p.id === formData.plan);
   const currentFitnessGoal = FITNESS_GOALS.find(g => g.id === formData.fitnessGoal);
 
-
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
       <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6">Your Nutrition Profile</h2>
@@ -49,7 +47,8 @@ export const NutritionInfoScreen: React.FC = () => {
           <p className={`text-xl font-bold text-${PRIMARY_COLOR_CLASS}-600 dark:text-${PRIMARY_COLOR_CLASS}-400`}>
             {selectedPlanDetails?.name || 'Free Plan'}
           </p>
-          {selectedPlanDetails?.id === 'premium' && <p className="text-xs text-gray-500 dark:text-gray-400">Access to all premium features.</p>}
+          {/* FIX: Removed the impossible 'premium' check */}
+          <p className="text-xs text-gray-500 dark:text-gray-400">Access to all features.</p>
         </div>
 
         <div className={`p-4 rounded-lg shadow border-l-4 border-yellow-500 bg-gray-50 dark:bg-gray-700 transform transition-shadow duration-200 ease-in-out hover:shadow-md`}>
@@ -118,3 +117,6 @@ export const NutritionInfoScreen: React.FC = () => {
     </div>
   );
 };
+
+
+// --- END OF FILE screens/profile/NutritionInfoScreen.tsx ---

@@ -49,13 +49,8 @@ export const HEALTH_CONDITIONS: HealthConditionOption[] = [
 
 export const PLANS: Plan[] = [
   {
-    id: 'free',
-    name: 'Free Plan',
-    features: ['Basic meal tracking', 'Limited workout plans', 'Community access'],
-  },
-  {
-    id: 'premium',
-    name: 'Premium Plan',
+    id: 'nutria',
+    name: 'Nutria Plan',
     price: '₹499/month', // Example price
     features: ['Personalized meal plans', 'Full workout library', 'Dietitian support', 'Advanced tracking'],
   },

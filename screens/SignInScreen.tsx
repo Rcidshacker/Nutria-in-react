@@ -1,3 +1,4 @@
+// --- START OF FILE screens/SignInScreen.tsx ---
 
 import React, { useState } from 'react';
 import { Input } from '../components/Input';
@@ -6,25 +7,14 @@ import { Logo } from '../components/Logo';
 import { SocialLoginButton, GoogleIcon, FacebookIcon, MicrosoftIcon } from '../components/SocialLoginButton';
 import { useTheme } from '../contexts/ThemeContext';
 import { Theme } from '../types';
-import { PRIMARY_COLOR_CLASS } from '../constants'; // melon
+import { Mail, LockKeyhole } from 'lucide-react'; // UPDATED: Import icons
 
 interface SignInScreenProps {
   onNavigateToSignUp: () => void;
   onSignInSuccess: () => void;
 }
 
-const EmailIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className || "w-5 h-5 text-cocoa-400"}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
-  </svg>
-);
-
-const LockIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className || "w-5 h-5 text-cocoa-400"}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 0 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-  </svg>
-);
-
+// DELETED: Manual EmailIcon and LockIcon components are no longer needed.
 
 export const SignInScreen: React.FC<SignInScreenProps> = ({ onNavigateToSignUp, onSignInSuccess }) => {
   const [email, setEmail] = useState('');
@@ -43,8 +33,6 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({ onNavigateToSignUp, 
     setIsLoading(true);
     // Simulate API call
     setTimeout(() => {
-      // Simulate successful login for any non-empty credentials for testing, or use specific ones.
-      // if (email === 'user@example.com' && password === 'password') {
       if (email && password) { // Simplified success for demo
         onSignInSuccess();
       } else {
@@ -75,7 +63,8 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({ onNavigateToSignUp, 
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
             required
-            icon={<EmailIcon className={`w-5 h-5 ${iconColorClass}`} />}
+            // UPDATED: Use lucide-react icon
+            icon={<Mail className={`w-5 h-5 ${iconColorClass}`} />}
           />
           <Input
             id="password"
@@ -85,7 +74,8 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({ onNavigateToSignUp, 
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
             required
-            icon={<LockIcon className={`w-5 h-5 ${iconColorClass}`} />}
+            // UPDATED: Use lucide-react icon
+            icon={<LockKeyhole className={`w-5 h-5 ${iconColorClass}`} />}
           />
           <div className="text-right mb-6">
             <Button variant="link" type="button" className="text-sm" onClick={() => alert('Forgot password functionality not implemented.')}>
@@ -117,3 +107,5 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({ onNavigateToSignUp, 
     </div>
   );
 };
+
+// --- END OF FILE screens/SignInScreen.tsx ---

@@ -1,8 +1,10 @@
+// --- START OF FILE screens/steps/Step1Welcome.tsx ---
 
 import React from 'react';
 import { Button } from '../../components/Button';
 import { Logo } from '../../components/Logo';
-import { APP_NAME, PRIMARY_COLOR_CLASS } from '../../constants';
+// FIX: Removed unused PRIMARY_COLOR_CLASS import
+import { APP_NAME } from '../../constants';
 import { StepWrapper } from '../../components/StepWrapper';
 
 interface Step1WelcomeProps {
@@ -27,3 +29,5 @@ export const Step1Welcome: React.FC<Step1WelcomeProps> = ({ onNext }) => {
     </StepWrapper>
   );
 };
+
+// --- END OF FILE screens/steps/Step1Welcome.tsx ---

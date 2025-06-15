@@ -1,30 +1,15 @@
+// --- START OF FILE screens/profile/OrdersScreen.tsx ---
 
 import React, { useState, useMemo } from 'react';
 import { Button } from '../../components/Button';
 import { RadioCard } from '../../components/RadioCard';
 import { SavedMealItem, PaymentOptionType, AppRoute, PaymentMethod } from '../../types';
-import { PRIMARY_COLOR_CLASS, ACCENT_COLOR_CLASS } from '../../constants';
+import { PRIMARY_COLOR_CLASS } from '../../constants';
 
-// --- Icons (Placeholder SVGs - ensure these are defined in index.html) ---
-const TrashIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><use href="#icon-trash"></use></svg>
-);
-const GPayIcon: React.FC<{ className?: string }> = ({ className = "w-8 h-8" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 51.9 20.9" className={className}><use href="#icon-gpay"></use></svg>
-);
-const VisaIcon: React.FC<{ className?: string }> = ({ className = "w-8 h-8" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 61 20" className={className}><use href="#icon-visa"></use></svg>
-);
-const MastercardIcon: React.FC<{ className?: string }> = ({ className = "w-8 h-8" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 20" className={className}><use href="#icon-mastercard"></use></svg>
-);
-const CloseIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
-);
-const ShoppingBagIcon: React.FC<{ className?: string }> = ({ className = "w-12 h-12" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>
-);
+// UPDATED: Import icons from lucide-react
+import { Trash2, Wallet, CreditCard, X, ShoppingBag } from 'lucide-react';
 
+// DELETED: Manual SVG icon components are no longer needed.
 
 const initialSavedMeals: SavedMealItem[] = [
   { id: 'meal1', name: 'Grilled Chicken Salad', imageUrl: 'https://picsum.photos/seed/meal1order/100/100', price: 250, quantity: 1 },
@@ -32,10 +17,11 @@ const initialSavedMeals: SavedMealItem[] = [
   { id: 'meal3', name: 'Berry Smoothie', imageUrl: 'https://picsum.photos/seed/meal3order/100/100', price: 180, quantity: 1 },
 ];
 
+// UPDATED: Payment options use lucide-react icons
 const paymentOptions: PaymentOptionType[] = [
-  { id: 'upi', label: 'GPay / UPI', icon: GPayIcon },
-  { id: 'visa', label: 'Visa Card', icon: VisaIcon },
-  { id: 'mastercard', label: 'Mastercard', icon: MastercardIcon },
+  { id: 'upi', label: 'GPay / UPI', icon: Wallet },
+  { id: 'visa', label: 'Visa Card', icon: CreditCard },
+  { id: 'mastercard', label: 'Mastercard', icon: CreditCard },
 ];
 
 interface OrdersScreenProps {
@@ -90,7 +76,7 @@ export const OrdersScreen: React.FC<OrdersScreenProps> = ({ navigateTo }) => {
 
       {savedMeals.length === 0 ? (
         <div className="flex-grow flex flex-col items-center justify-center text-center p-6">
-          <ShoppingBagIcon className={`w-20 h-20 text-gray-400 dark:text-gray-500 mb-4`} />
+          <ShoppingBag className={`w-20 h-20 text-gray-400 dark:text-gray-500 mb-4`} />
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-3">Your order list is empty.</p>
           <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Browse our delicious meals and add your favorites!</p>
           <Button onClick={() => navigateTo('#/app/mealplans')} variant="primary">
@@ -115,7 +101,7 @@ export const OrdersScreen: React.FC<OrdersScreenProps> = ({ navigateTo }) => {
                 <div className="text-right ml-2">
                     <p className="text-md sm:text-lg font-semibold text-gray-800 dark:text-white">Rs {(meal.price * meal.quantity).toFixed(2)}</p>
                     <button onClick={() => handleRemoveMeal(meal.id)} className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 mt-1 transition-colors" aria-label="Remove meal">
-                        <TrashIcon className="w-5 h-5" />
+                        <Trash2 className="w-5 h-5" />
                     </button>
                 </div>
               </div>
@@ -151,23 +137,26 @@ export const OrdersScreen: React.FC<OrdersScreenProps> = ({ navigateTo }) => {
             <div className="flex justify-between items-center mb-6">
               <h3 id="payment-modal-title" className="text-xl font-semibold text-gray-800 dark:text-white">Choose Payment Method</h3>
               <button onClick={() => setShowPaymentModal(false)} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" aria-label="Close payment modal">
-                <CloseIcon />
+                <X className="w-6 h-6" />
               </button>
             </div>
 
             <div className="space-y-3 mb-6">
-              {paymentOptions.map(option => (
-                <RadioCard
-                  key={option.id}
-                  id={`payment-${option.id}`}
-                  name="paymentMethod"
-                  value={option.id}
-                  label={option.label}
-                  icon={<option.icon className={`w-7 h-7 mr-3`} />}
-                  checked={selectedPaymentMethod === option.id}
-                  onChange={(e) => setSelectedPaymentMethod(e.target.value as PaymentMethod)}
-                />
-              ))}
+              {paymentOptions.map(option => {
+                  const Icon = option.icon;
+                  return (
+                    <RadioCard
+                      key={option.id}
+                      id={`payment-${option.id}`}
+                      name="paymentMethod"
+                      value={option.id}
+                      label={option.label}
+                      icon={<Icon className={`w-7 h-7 mr-3`} />}
+                      checked={selectedPaymentMethod === option.id}
+                      onChange={(e) => setSelectedPaymentMethod(e.target.value as PaymentMethod)}
+                    />
+                  )
+                })}
             </div>
 
             <div className="text-lg font-medium text-gray-700 dark:text-gray-200 mb-1">
@@ -191,3 +180,6 @@ export const OrdersScreen: React.FC<OrdersScreenProps> = ({ navigateTo }) => {
     </div>
   );
 };
+
+
+// --- END OF FILE screens/profile/OrdersScreen.tsx ---

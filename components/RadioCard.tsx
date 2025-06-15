@@ -1,6 +1,7 @@
+// --- START OF FILE components/RadioCard.tsx ---
 
 import React from 'react';
-import { PRIMARY_COLOR_CLASS } from '../constants'; // melon
+import { PRIMARY_COLOR_CLASS } from '../constants';
 
 interface RadioCardProps {
   id: string;
@@ -36,11 +37,16 @@ export const RadioCard: React.FC<RadioCardProps> = ({
         ${className}
       `}
     >
-      {icon && <div className="mr-4 text-2xl text-cocoa-600 dark:text-clay-300">{icon}</div>}
-      <div className="flex-grow">
-        <span className="font-medium text-cocoa-800 dark:text-peach-100">{label}</span>
-        {description && <p className="text-sm text-cocoa-500 dark:text-clay-300">{description}</p>}
+      {/* --- FIX START: Main content container with flex-grow --- */}
+      <div className="flex flex-grow items-center">
+        {icon && <div className="mr-3 text-2xl text-cocoa-600 dark:text-clay-300">{icon}</div>}
+        <div className="flex-grow">
+          <span className="font-medium text-cocoa-800 dark:text-peach-100">{label}</span>
+          {description && <p className="text-sm text-cocoa-500 dark:text-clay-300">{description}</p>}
+        </div>
       </div>
+      {/* --- FIX END --- */}
+
       <input
         type="radio"
         id={id}
@@ -48,11 +54,14 @@ export const RadioCard: React.FC<RadioCardProps> = ({
         value={value}
         checked={checked}
         onChange={onChange}
-        className="sr-only" // Hide the actual radio button, styling is on the label
+        className="sr-only"
       />
-       <div className={`w-5 h-5 border-2 rounded-full flex items-center justify-center ml-4 ${checked ? `border-${PRIMARY_COLOR_CLASS}-500 bg-${PRIMARY_COLOR_CLASS}-500` : 'border-cocoa-400 dark:border-cocoa-500'}`}>
+      {/* FIX: Removed ml-4 to allow natural spacing, added flex-shrink-0 to prevent it from shrinking */}
+      <div className={`w-5 h-5 border-2 rounded-full flex items-center justify-center flex-shrink-0 ${checked ? `border-${PRIMARY_COLOR_CLASS}-500 bg-${PRIMARY_COLOR_CLASS}-500` : 'border-cocoa-400 dark:border-cocoa-500'}`}>
           {checked && <div className="w-2 h-2 bg-white rounded-full"></div>}
-        </div>
+      </div>
     </label>
   );
 };
+
+// --- END OF FILE components/RadioCard.tsx ---

@@ -1,3 +1,4 @@
+// --- START OF FILE index.tsx ---
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -14,4 +15,5 @@ root.render(
     <App />
   </React.StrictMode>
 );
-    
+
+// --- END OF FILE index.tsx ---

@@ -1,3 +1,4 @@
+// --- START OF FILE screens/ProgressScreen.tsx ---
 
 import React, { useState, useMemo, useRef } from 'react';
 import { Button } from '../components/Button';
@@ -5,41 +6,18 @@ import { Input } from '../components/Input';
 import { WeightEntry, ProgressPhoto, Achievement, MeasurementEntry } from '../types';
 import { PRIMARY_COLOR_CLASS, ACCENT_COLOR_CLASS } from '../constants';
 
-// --- Icons (Simple SVGs - ensure these are defined in index.html or via a library) ---
-const ChartLineIcon: React.FC<{ className?: string }> = ({ className = "w-12 h-12" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-        <use href="#icon-chart-line"></use>
-    </svg>
-);
-const PlusCircleIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-        <use href="#icon-plus-circle"></use>
-    </svg>
-);
-const CalendarDaysIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-        <use href="#icon-calendar-days"></use>
-    </svg>
-);
-const CameraIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-        <use href="#icon-camera"></use>
-    </svg>
-);
-const TrophyIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-        <use href="#icon-trophy"></use>
-    </svg>
-);
-const TapeMeasureIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-        <use href="#icon-tape-measure"></use>
-    </svg>
-);
-const CloseIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
-);
+// UPDATED: Icons are now imported from lucide-react
+import {
+  LineChart,
+  PlusCircle,
+  CalendarDays,
+  Camera,
+  Trophy,
+  Ruler,
+  X,
+} from 'lucide-react';
 
+// DELETED: All manual SVG icon components and <use> references are no longer needed.
 
 const initialWeightLog: WeightEntry[] = [
     { id: 'w1', date: '2024-07-01', value: 75, notes: 'Starting weight' },
@@ -58,9 +36,10 @@ const initialAchievements: Achievement[] = [
 ];
 
 const otherMetrics: { id: MeasurementEntry['metricName']; name: string; icon: React.FC<{className?: string}>; unit: string; latestValue?: number }[] = [
-    { id: 'bodyFat', name: 'Body Fat %', icon: TapeMeasureIcon, unit: '%', latestValue: 22 },
-    { id: 'waist', name: 'Waist', icon: TapeMeasureIcon, unit: 'cm', latestValue: 85 },
-    { id: 'hips', name: 'Hips', icon: TapeMeasureIcon, unit: 'cm' },
+    // UPDATED: Using lucide-react components for icons
+    { id: 'bodyFat', name: 'Body Fat %', icon: Ruler, unit: '%', latestValue: 22 },
+    { id: 'waist', name: 'Waist', icon: Ruler, unit: 'cm', latestValue: 85 },
+    { id: 'hips', name: 'Hips', icon: Ruler, unit: 'cm' },
 ];
 
 
@@ -163,7 +142,7 @@ export const ProgressScreen: React.FC = () => {
           </div>
         ) : (
           <div className="text-center py-10">
-            <ChartLineIcon className={`w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4`} />
+            <LineChart className={`w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4`} />
             <p className="text-gray-600 dark:text-gray-300 mb-3">No weight data for this period.</p>
             <Button onClick={() => setShowWeightModal(true)}>Track First Weight</Button>
           </div>
@@ -172,7 +151,7 @@ export const ProgressScreen: React.FC = () => {
 
       <div className="text-center">
         <Button onClick={() => setShowWeightModal(true)} size="lg" className={`bg-${PRIMARY_COLOR_CLASS}-600 hover:bg-${PRIMARY_COLOR_CLASS}-700`}>
-          <PlusCircleIcon className="inline mr-2" /> Track New Weight
+          <PlusCircle className="inline mr-2" /> Track New Weight
         </Button>
       </div>
 
@@ -216,7 +195,7 @@ export const ProgressScreen: React.FC = () => {
         )}
         <div className="text-center mt-4">
           <Button onClick={triggerPhotoUpload} variant="secondary">
-            <CameraIcon className="inline mr-2" /> Add Photo
+            <Camera className="inline mr-2" /> Add Photo
           </Button>
           <input type="file" accept="image/*" ref={fileInputRef} onChange={handlePhotoUpload} className="hidden" />
         </div>
@@ -228,7 +207,7 @@ export const ProgressScreen: React.FC = () => {
           <div className="space-y-3">
             {achievements.map(ach => (
               <div key={ach.id} className={`bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md flex items-center border-l-4 border-${ach.color || PRIMARY_COLOR_CLASS}-500 transform transition-all duration-200 ease-in-out hover:shadow-lg hover:scale-[1.03]`}>
-                <TrophyIcon className={`w-8 h-8 text-${ach.color || PRIMARY_COLOR_CLASS}-500 mr-4`} />
+                <Trophy className={`w-8 h-8 text-${ach.color || PRIMARY_COLOR_CLASS}-500 mr-4`} />
                 <div>
                   <h3 className="font-semibold text-gray-800 dark:text-white">{ach.title}</h3>
                   {ach.description && <p className="text-sm text-gray-600 dark:text-gray-400">{ach.description}</p>}
@@ -257,7 +236,7 @@ export const ProgressScreen: React.FC = () => {
             <div className="flex justify-between items-center mb-4">
                 <h3 id="track-weight-title" className="text-xl font-semibold text-gray-800 dark:text-white">Log Your New Weight</h3>
                 <button onClick={() => setShowWeightModal(false)} aria-label="Close modal" className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                    <CloseIcon />
+                    <X className="w-6 h-6" />
                 </button>
             </div>
             <Input
@@ -267,7 +246,7 @@ export const ProgressScreen: React.FC = () => {
               value={newWeightEntry.value}
               onChange={(e) => setNewWeightEntry(prev => ({ ...prev, value: e.target.value }))}
               placeholder="e.g. 70.5"
-              icon={<PlusCircleIcon className="text-gray-400" />}
+              icon={<PlusCircle className="text-gray-400" />}
               autoFocus
             />
             <Input
@@ -276,7 +255,7 @@ export const ProgressScreen: React.FC = () => {
               type="date"
               value={newWeightEntry.date}
               onChange={(e) => setNewWeightEntry(prev => ({ ...prev, date: e.target.value }))}
-              icon={<CalendarDaysIcon className="text-gray-400" />}
+              icon={<CalendarDays className="text-gray-400" />}
             />
             <Input
               label="Notes (Optional)"
@@ -296,3 +275,5 @@ export const ProgressScreen: React.FC = () => {
     </div>
   );
 };
+
+// --- END OF FILE screens/ProgressScreen.tsx ---

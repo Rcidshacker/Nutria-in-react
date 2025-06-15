@@ -1,15 +1,16 @@
+// --- START OF FILE screens/steps/Step7Payment.tsx ---
 
 import React, { useState } from 'react';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
-import { RadioCard } from '../../components/RadioCard'; // Re-using for payment methods
+import { RadioCard } from '../../components/RadioCard';
 import { useSignUpForm } from '../../contexts/SignUpContext';
-import { PLANS, PAYMENT_METHODS, PRIMARY_COLOR_CLASS } from '../../constants'; // melon
+import { PLANS, PAYMENT_METHODS, PRIMARY_COLOR_CLASS } from '../../constants';
 import { PaymentMethod } from '../../types';
 import { StepWrapper } from '../../components/StepWrapper';
 
 interface Step7PaymentProps {
-  onNext: () => void; // This will be the final completion
+  onNext: () => void;
 }
 
 export const Step7Payment: React.FC<Step7PaymentProps> = ({ onNext }) => {
@@ -18,12 +19,11 @@ export const Step7Payment: React.FC<Step7PaymentProps> = ({ onNext }) => {
   const [errors, setErrors] = useState<Partial<Record<keyof typeof formData | 'paymentMethod', string>>>({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const premiumPlan = PLANS.find(p => p.id === 'premium');
+  const premiumPlan = PLANS.find(p => p.id === 'nutria');
   const amount = premiumPlan?.price || 'N/A';
 
   const handlePaymentMethodChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedPaymentMethod(e.target.value as PaymentMethod);
-    // Clear specific payment details when method changes
     updateFormData({ upiId: '', cardNumber: '', cardExpiry: '', cardCvv: '' });
     if (errors.paymentMethod) setErrors(prev => ({ ...prev, paymentMethod: undefined }));
   };
@@ -54,20 +54,15 @@ export const Step7Payment: React.FC<Step7PaymentProps> = ({ onNext }) => {
   const handleCompleteSignup = () => {
     if (validate()) {
       setIsLoading(true);
-      // Simulate payment processing
       setTimeout(() => {
         setIsLoading(false);
-        onNext(); // This triggers the final completion in SignUpScreen
+        onNext();
       }, 2000);
     }
   };
-
-  if (formData.plan !== 'premium') {
-    // This step should ideally not be reached if plan is free,
-    // but as a fallback, we can redirect or show a message.
-    // For now, just indicate it (SignUpScreen handles the skip).
-    return <StepWrapper title="Payment"><p className="text-cocoa-600 dark:text-clay-300">Payment step is for Premium users only.</p></StepWrapper>;
-  }
+  
+  // FIX: This entire 'if' block is removed as it's no longer necessary.
+  // if (formData.plan !== 'nutria') { ... }
 
   return (
     <StepWrapper title="Complete Your Payment">
@@ -116,7 +111,7 @@ export const Step7Payment: React.FC<Step7PaymentProps> = ({ onNext }) => {
             onChange={handleChange}
             error={errors.cardNumber}
             placeholder="•••• •••• •••• ••••"
-            maxLength={19} // 16 digits + 3 spaces for visual formatting if desired
+            maxLength={19}
           />
           <div className="grid grid-cols-2 gap-4">
             <Input
@@ -133,7 +128,7 @@ export const Step7Payment: React.FC<Step7PaymentProps> = ({ onNext }) => {
               label="CVV"
               id="cardCvv"
               name="cardCvv"
-              type="password" // Mask CVV
+              type="password"
               value={formData.cardCvv || ''}
               onChange={handleChange}
               error={errors.cardCvv}
@@ -150,3 +145,5 @@ export const Step7Payment: React.FC<Step7PaymentProps> = ({ onNext }) => {
     </StepWrapper>
   );
 };
+
+// --- END OF FILE screens/steps/Step7Payment.tsx ---
