@@ -1,6 +1,6 @@
 // --- START OF FILE layouts/MainAppLayout.tsx ---
 
-import React from 'react';
+import React, { useEffect } from 'react'; // UPDATED: Imported useEffect
 import { BottomTabBar } from '../components/BottomTabBar';
 import { HomeScreen } from '../screens/HomeScreen';
 import { MealPlansScreen } from '../screens/MealPlansScreen';
@@ -10,11 +10,7 @@ import { ProfileScreen } from '../screens/ProfileScreen';
 import { RecipeScreen } from '../screens/RecipeScreen'; 
 import { ScanScreen } from '../screens/ScanScreen';
 import { AppRoute, TabDefinition } from '../types';
-
-// UPDATED: Import all navigation icons from lucide-react
 import { Home, Soup, LineChart, PieChart, User, ScanLine } from 'lucide-react';
-
-// DELETED: All manual SVG icon components are no longer needed.
 
 interface MainAppLayoutProps {
   currentRoute: AppRoute;
@@ -22,7 +18,6 @@ interface MainAppLayoutProps {
   navigateTo: (route: AppRoute) => void;
 }
 
-// UPDATED: The TABS constant now uses the lucide-react components
 const TABS: TabDefinition[] = [
   { path: '/home', label: 'Home', icon: Home, screen: HomeScreen },
   { path: '/mealplans', label: 'Meals', icon: Soup, screen: MealPlansScreen },
@@ -33,6 +28,11 @@ const TABS: TabDefinition[] = [
 ];
 
 export const MainAppLayout: React.FC<MainAppLayoutProps> = ({ currentRoute, onSignOut, navigateTo }) => {
+  // --- FIX: Add a useEffect hook to scroll to top on route change ---
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentRoute]); // Dependency array ensures this runs every time the route changes
+
   const baseAppPath = currentRoute.startsWith('#/app') ? currentRoute.substring(5) : '/home';
   const mainPathSegment = '/' + (baseAppPath.split('/')[1] || 'home');
 
