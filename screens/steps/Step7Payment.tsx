@@ -1,4 +1,4 @@
-// --- START OF FILE screens/steps/Step7Payment.tsx ---
+// --- START OF FILE: screens/steps/Step7Payment.tsx ---
 
 import React, { useState } from 'react';
 import { Input } from '../../components/Input';
@@ -9,15 +9,16 @@ import { PLANS, PAYMENT_METHODS, PRIMARY_COLOR_CLASS } from '../../constants';
 import { PaymentMethod } from '../../types';
 import { StepWrapper } from '../../components/StepWrapper';
 
+// UPDATED: Add isLoading to the props
 interface Step7PaymentProps {
   onNext: () => void;
+  isLoading: boolean;
 }
 
-export const Step7Payment: React.FC<Step7PaymentProps> = ({ onNext }) => {
+export const Step7Payment: React.FC<Step7PaymentProps> = ({ onNext, isLoading }) => {
   const { formData, updateFormData } = useSignUpForm();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod>('');
   const [errors, setErrors] = useState<Partial<Record<keyof typeof formData | 'paymentMethod', string>>>({});
-  const [isLoading, setIsLoading] = useState(false);
 
   const premiumPlan = PLANS.find(p => p.id === 'nutria');
   const amount = premiumPlan?.price || 'N/A';
@@ -51,18 +52,15 @@ export const Step7Payment: React.FC<Step7PaymentProps> = ({ onNext }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleCompleteSignup = () => {
+  const handleAttemptPayment = () => {
     if (validate()) {
-      setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-        onNext();
-      }, 2000);
+      onNext(); // This will trigger handleCompleteSignup in the parent
     }
   };
-  
-  // FIX: This entire 'if' block is removed as it's no longer necessary.
-  // if (formData.plan !== 'nutria') { ... }
+
+  if (formData.plan !== 'nutria') {
+    return <StepWrapper title="Payment"><p className="text-cocoa-600 dark:text-clay-300">Payment is only for the Nutria plan.</p></StepWrapper>;
+  }
 
   return (
     <StepWrapper title="Complete Your Payment">
@@ -70,17 +68,13 @@ export const Step7Payment: React.FC<Step7PaymentProps> = ({ onNext }) => {
         <p className="text-lg font-medium text-cocoa-800 dark:text-peach-100">Amount Due:</p>
         <p className={`text-3xl font-bold text-${PRIMARY_COLOR_CLASS}-600 dark:text-${PRIMARY_COLOR_CLASS}-400`}>{amount}</p>
       </div>
-
       <div className="mb-6">
         <label className="block text-sm font-medium text-cocoa-700 dark:text-clay-200 mb-2">Select Payment Method:</label>
         <div className="space-y-3">
           {PAYMENT_METHODS.map(method => (
             <RadioCard
-              key={method.id}
-              id={`payment-${method.id}`}
-              name="paymentMethod"
-              value={method.id}
-              label={method.label}
+              key={method.id} id={`payment-${method.id}`} name="paymentMethod"
+              value={method.id} label={method.label}
               checked={selectedPaymentMethod === method.id}
               onChange={handlePaymentMethodChange}
             />
@@ -88,62 +82,34 @@ export const Step7Payment: React.FC<Step7PaymentProps> = ({ onNext }) => {
         </div>
         {errors.paymentMethod && <p className="mt-1 text-xs text-red-500">{errors.paymentMethod}</p>}
       </div>
-
       {selectedPaymentMethod === 'upi' && (
         <Input
-          label="UPI ID"
-          id="upiId"
-          name="upiId"
-          value={formData.upiId || ''}
-          onChange={handleChange}
-          error={errors.upiId}
-          placeholder="yourname@bank"
+          label="UPI ID" id="upiId" name="upiId" value={formData.upiId || ''}
+          onChange={handleChange} error={errors.upiId} placeholder="yourname@bank"
         />
       )}
-
       {['visa', 'mastercard', 'rupay'].includes(selectedPaymentMethod) && (
         <div className="space-y-4">
           <Input
-            label="Card Number"
-            id="cardNumber"
-            name="cardNumber"
-            value={formData.cardNumber || ''}
-            onChange={handleChange}
-            error={errors.cardNumber}
-            placeholder="•••• •••• •••• ••••"
-            maxLength={19}
+            label="Card Number" id="cardNumber" name="cardNumber" value={formData.cardNumber || ''}
+            onChange={handleChange} error={errors.cardNumber} placeholder="•••• •••• •••• ••••" maxLength={19}
           />
           <div className="grid grid-cols-2 gap-4">
             <Input
-              label="Expiry (MM/YY)"
-              id="cardExpiry"
-              name="cardExpiry"
-              value={formData.cardExpiry || ''}
-              onChange={handleChange}
-              error={errors.cardExpiry}
-              placeholder="MM/YY"
-              maxLength={5}
+              label="Expiry (MM/YY)" id="cardExpiry" name="cardExpiry" value={formData.cardExpiry || ''}
+              onChange={handleChange} error={errors.cardExpiry} placeholder="MM/YY" maxLength={5}
             />
             <Input
-              label="CVV"
-              id="cardCvv"
-              name="cardCvv"
-              type="password"
-              value={formData.cardCvv || ''}
-              onChange={handleChange}
-              error={errors.cardCvv}
-              placeholder="•••"
-              maxLength={4}
+              label="CVV" id="cardCvv" name="cardCvv" type="password" value={formData.cardCvv || ''}
+              onChange={handleChange} error={errors.cardCvv} placeholder="•••" maxLength={4}
             />
           </div>
         </div>
       )}
-
-      <Button onClick={handleCompleteSignup} fullWidth isLoading={isLoading} className="mt-8">
+      {/* UPDATED: Pass the isLoading prop to the button */}
+      <Button onClick={handleAttemptPayment} fullWidth isLoading={isLoading} className="mt-8">
         Complete Signup & Pay {amount}
       </Button>
     </StepWrapper>
   );
 };
-
-// --- END OF FILE screens/steps/Step7Payment.tsx ---

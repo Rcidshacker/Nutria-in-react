@@ -1,13 +1,21 @@
+// --- START OF FILE screens/profile/AppearanceScreen.tsx ---
+
 import React from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { Theme } from '../../types';
 import { PRIMARY_COLOR_CLASS } from '../../constants';
+import { motion } from 'framer-motion'; // UPDATED: Import motion
 
 export const AppearanceScreen: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md"
+    >
       <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6">Appearance</h2>
       
       <div className="mb-4">
@@ -54,6 +62,8 @@ export const AppearanceScreen: React.FC = () => {
         </div>
       </div>
 
-    </div>
+    </motion.div>
   );
 };
+
+// --- END OF FILE screens/profile/AppearanceScreen.tsx ---

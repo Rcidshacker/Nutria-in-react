@@ -1,3 +1,4 @@
+// --- START OF FILE components/Button.tsx ---
 
 import React from 'react';
 import { PRIMARY_COLOR_CLASS, ACCENT_COLOR_CLASS } from '../constants';
@@ -21,7 +22,7 @@ export const Button: React.FC<ButtonProps> = ({
   const baseStyles = "font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-cocoa-800 transform transition-all duration-200 ease-in-out";
   
   let variantStyles = "";
-  let hoverActiveStyles = "hover:scale-[1.02] active:scale-[0.98] hover:-translate-y-px";
+  let hoverActiveStyles = "hover:scale-[1.02] active:scale-[0.98]";
 
   switch (variant) {
     case 'primary':
@@ -38,20 +39,21 @@ export const Button: React.FC<ButtonProps> = ({
       break;
     case 'link':
       variantStyles = `text-${PRIMARY_COLOR_CLASS}-600 hover:underline dark:text-${PRIMARY_COLOR_CLASS}-400 focus:ring-${PRIMARY_COLOR_CLASS}-500`;
-      hoverActiveStyles = ""; // Links typically don't scale or translate
+      hoverActiveStyles = ""; 
       break;
   }
 
   let sizeStyles = "";
+  // UPDATED: Padding increased for better mobile touch targets
   switch (size) {
     case 'sm':
-      sizeStyles = "px-3 py-1.5 text-sm";
+      sizeStyles = "px-3 py-2 text-sm"; // py-1.5 -> py-2
       break;
     case 'md':
-      sizeStyles = "px-4 py-2 text-base";
+      sizeStyles = "px-4 py-2.5 text-base"; // py-2 -> py-2.5
       break;
     case 'lg':
-      sizeStyles = "px-6 py-3 text-lg";
+      sizeStyles = "px-6 py-3.5 text-lg"; // py-3 -> py-3.5
       break;
   }
 
@@ -74,3 +76,6 @@ export const Button: React.FC<ButtonProps> = ({
     </button>
   );
 };
+
+
+// --- END OF FILE components/Button.tsx ---

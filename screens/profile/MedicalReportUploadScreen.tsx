@@ -2,11 +2,11 @@
 
 import React, { useState, useRef } from 'react';
 import { Button } from '../../components/Button';
-// FIX: Removed unused 'Input' component import
 import { useSignUpForm } from '../../contexts/SignUpContext';
 import { StepWrapper } from '../../components/StepWrapper'; 
 import { PRIMARY_COLOR_CLASS, ACCENT_COLOR_CLASS } from '../../constants';
 import { AppRoute, SignUpFormData } from '../../types'; 
+import { motion } from 'framer-motion'; // UPDATED: Import motion
 
 import { UploadCloud, Camera, CheckCircle, Loader } from 'lucide-react';
 
@@ -26,10 +26,7 @@ export const MedicalReportUploadScreen: React.FC<MedicalReportUploadScreenProps>
     .filter(keyString => keyString.startsWith('report') && formData[keyString as keyof SignUpFormData])
     .reduce<Partial<SignUpFormData>>((acc, keyString) => {
         const typedKey = keyString as keyof SignUpFormData;
-        return {
-            ...acc,
-            [typedKey]: formData[typedKey]
-        };
+        return { ...acc, [typedKey]: formData[typedKey] };
     }, {} as Partial<SignUpFormData>);
 
   const [extractedData, setExtractedData] = useState<Partial<SignUpFormData>>(initialExtractedData);
@@ -38,15 +35,10 @@ export const MedicalReportUploadScreen: React.FC<MedicalReportUploadScreenProps>
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        alert("File size exceeds 5MB. Please upload a smaller file.");
-        return;
-      }
+      if (file.size > 5 * 1024 * 1024) { alert("File size exceeds 5MB. Please upload a smaller file."); return; }
       const allowedTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg'];
-      if (!allowedTypes.includes(file.type)) {
-        alert("Invalid file type. Please upload PDF, PNG, JPG, or JPEG.");
-        return;
-      }
+      if (!allowedTypes.includes(file.type)) { alert("Invalid file type. Please upload PDF, PNG, JPG, or JPEG."); return; }
+      
       setSelectedFile(file);
       setFileName(file.name);
       setExtractedData({}); 
@@ -59,28 +51,18 @@ export const MedicalReportUploadScreen: React.FC<MedicalReportUploadScreenProps>
     }
   };
 
-  const triggerFileInput = () => {
-    fileInputRef.current?.click();
-  };
+  const triggerFileInput = () => { fileInputRef.current?.click(); };
 
   const handleExtractData = (fileToProcess: File | null = selectedFile) => {
-    if (!fileToProcess) {
-      alert("Please select a file first.");
-      return;
-    }
+    if (!fileToProcess) { alert("Please select a file first."); return; }
     setIsExtracting(true);
     setExtractedData({}); 
 
     setTimeout(() => {
       const mockExtracted: Partial<SignUpFormData> = {
-        reportPatientName: formData.fullName || 'Alex Doe', 
-        reportDate: new Date().toLocaleDateString('en-CA'), 
+        reportPatientName: formData.fullName || 'Alex Doe', reportDate: new Date().toLocaleDateString('en-CA'), 
         reportHba1c: `${(Math.random() * (7.5 - 5.0) + 5.0).toFixed(1)}%`,
         reportGlucose: `${Math.floor(Math.random() * (150 - 80) + 80)} mg/dL`,
-        reportHemoglobin: `${(Math.random() * (16.0 - 12.0) + 12.0).toFixed(1)} g/dL`,
-        reportTsh: `${(Math.random() * (4.5 - 0.5) + 0.5).toFixed(1)} mIU/L`,
-        reportRbc: `${(Math.random() * (5.5 - 4.0) + 4.0).toFixed(2)} million/mcL`,
-        reportWbc: `${Math.floor(Math.random() * (11000 - 4000) + 4000)} /mcL`,
       };
       setExtractedData(mockExtracted); 
       updateFormData(mockExtracted); 
@@ -95,16 +77,15 @@ export const MedicalReportUploadScreen: React.FC<MedicalReportUploadScreenProps>
             return; 
         }
     }
-    if (mode === 'onboarding' && onNext) {
-      onNext();
-    } else if (mode === 'profile' && navigateTo) {
+    if (mode === 'onboarding' && onNext) onNext();
+    else if (mode === 'profile' && navigateTo) {
       alert("Medical report details updated!");
       navigateTo('#/app/profile'); 
     }
   };
   
   const screenContent = (
-    <>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
       <p className="text-sm text-gray-600 dark:text-gray-300 mb-6 text-center">
         Please upload your latest medical report (PDF or Image). This helps us personalize your plan.
       </p>
@@ -120,50 +101,12 @@ export const MedicalReportUploadScreen: React.FC<MedicalReportUploadScreenProps>
       </div>
       <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept=".pdf,.png,.jpg,.jpeg" />
 
-      {fileName && (
-        <div className="mb-4 p-3 bg-gray-100 dark:bg-gray-700 rounded-md text-sm text-gray-700 dark:text-gray-300">
-          Selected file: <strong>{fileName}</strong>
-        </div>
-      )}
-
-      {selectedFile && !isExtracting && Object.keys(extractedData).length === 0 && (
-         <Button onClick={() => handleExtractData()} fullWidth className={`my-4 bg-blue-500 hover:bg-blue-600`}>
-            Extract Data from Report
-        </Button>
-      )}
-
-      {isExtracting && (
-        <div className="text-center my-6 p-4 bg-yellow-100 dark:bg-yellow-700/30 rounded-md">
-          <Loader className="animate-spin h-8 w-8 text-yellow-600 dark:border-yellow-400 mx-auto mb-2" />
-          <p className="text-yellow-700 dark:text-yellow-300">Extracting data from your report, please wait...</p>
-        </div>
-      )}
-
-      {Object.keys(extractedData).length > 0 && !isExtracting && (
-        <div className="my-6 p-4 border border-green-300 dark:border-green-600 bg-green-50 dark:bg-green-800/30 rounded-md">
-          <h3 className="text-lg font-semibold text-green-700 dark:text-green-300 mb-3 flex items-center">
-            <CheckCircle className="mr-2 w-5 h-5"/> Extraction Summary (Simulated)
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm">
-            {Object.entries(extractedData).map(([key, value]) => {
-              if (!key.startsWith('report') || !value) return null; 
-              return (
-                <div key={key} className="text-gray-700 dark:text-gray-300 py-1">
-                  <span className="font-medium capitalize">{key.replace('report', '').replace(/([A-Z])/g, ' $1').trim()}:</span> {String(value)}
-                </div>
-              );
-            })}
-          </div>
-           <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">Please verify the extracted values. You can re-upload if needed.</p>
-        </div>
-      )}
-      
-      { (selectedFile || Object.keys(extractedData).length > 0 || !isExtracting && Object.keys(initialExtractedData).length > 0) && (
-        <Button onClick={handleSaveAndProceed} fullWidth className="mt-6">
-            {mode === 'onboarding' ? 'Save & Continue' : 'Save Report & Close'}
-        </Button>
-      )}
-    </>
+      {fileName && ( <div className="mb-4 p-3 bg-gray-100 dark:bg-gray-700 rounded-md text-sm text-gray-700 dark:text-gray-300"> Selected file: <strong>{fileName}</strong> </div> )}
+      {selectedFile && !isExtracting && Object.keys(extractedData).length === 0 && ( <Button onClick={() => handleExtractData()} fullWidth className={`my-4 bg-blue-500 hover:bg-blue-600`}> Extract Data from Report </Button> )}
+      {isExtracting && ( <div className="text-center my-6 p-4 bg-yellow-100 dark:bg-yellow-700/30 rounded-md"> <Loader className="animate-spin h-8 w-8 text-yellow-600 dark:border-yellow-400 mx-auto mb-2" /> <p className="text-yellow-700 dark:text-yellow-300">Extracting data, please wait...</p> </div> )}
+      {Object.keys(extractedData).length > 0 && !isExtracting && ( <div className="my-6 p-4 border border-green-300 dark:border-green-600 bg-green-50 dark:bg-green-800/30 rounded-md"> <h3 className="text-lg font-semibold text-green-700 dark:text-green-300 mb-3 flex items-center"> <CheckCircle className="mr-2 w-5 h-5"/> Extraction Summary (Simulated) </h3> <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm"> {Object.entries(extractedData).map(([key, value]) => { if (!key.startsWith('report') || !value) return null; return ( <div key={key} className="text-gray-700 dark:text-gray-300 py-1"> <span className="font-medium capitalize">{key.replace('report', '').replace(/([A-Z])/g, ' $1').trim()}:</span> {String(value)} </div> ); })} </div> <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">Please verify the extracted values. You can re-upload if needed.</p> </div> )}
+      { (selectedFile || Object.keys(extractedData).length > 0 || !isExtracting && Object.keys(initialExtractedData).length > 0) && ( <Button onClick={handleSaveAndProceed} fullWidth className="mt-6"> {mode === 'onboarding' ? 'Save & Continue' : 'Save Report & Close'} </Button> )}
+    </motion.div>
   );
 
   if (mode === 'onboarding') {

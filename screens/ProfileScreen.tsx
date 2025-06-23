@@ -1,4 +1,4 @@
-// --- START OF FILE: screens/ProfileScreen.tsx ---
+// --- START OF FILE screens/ProfileScreen.tsx ---
 
 import React from 'react';
 import { Button } from '../components/Button';
@@ -8,27 +8,22 @@ import { EditProfileScreen } from './profile/EditProfileScreen';
 import { AppearanceScreen } from './profile/AppearanceScreen';
 import { SettingsScreen } from './profile/SettingsScreen';
 import { HelpSupportScreen } from './profile/HelpSupportScreen';
-import { BMICalculatorScreen } from './profile/BMICalculatorScreen';
 import { MedicalReportUploadScreen } from './profile/MedicalReportUploadScreen'; 
 import { AddressManagementScreen } from './profile/AddressManagementScreen';
-import { PricingPlansScreen } from './profile/PricingPlansScreen';
-import { NutritionInfoScreen } from './profile/NutritionInfoScreen';
 import { OrdersScreen } from './profile/OrdersScreen';
-import { BlogScreen } from './profile/BlogScreen'; // UPDATED: Import the new BlogScreen
+import { BlogScreen } from './profile/BlogScreen';
 
+// UPDATED: Removed imports for the deleted screens and their icons
 import {
   User,
   Palette,
   Settings2,
   HelpCircle,
-  Calculator,
   HeartPulse,
-  Leaf,
   MapPin,
-  CreditCard,
   Package,
   ChevronRight,
-  BookOpen, // UPDATED: Import a new icon for the blog
+  BookOpen,
 } from 'lucide-react';
 
 interface ProfileScreenProps {
@@ -45,17 +40,15 @@ interface ProfileLink {
   screen: React.FC<any>; 
 }
 
+// UPDATED: Removed the links for BMI Calculator, Pricing, and Nutrition Info
 const PROFILE_LINKS: ProfileLink[] = [
   { id: 'edit', label: 'Edit Profile', icon: User, pathSuffix: 'edit', screen: EditProfileScreen },
   { id: 'appearance', label: 'Appearance', icon: Palette, pathSuffix: 'appearance', screen: AppearanceScreen },
   { id: 'settings', label: 'Settings', icon: Settings2, pathSuffix: 'settings', screen: SettingsScreen },
   { id: 'orders', label: 'My Orders', icon: Package, pathSuffix: 'orders', screen: OrdersScreen },
   { id: 'medical-report', label: 'Upload/View Medical Report', icon: HeartPulse, pathSuffix: 'medical-report', screen: MedicalReportUploadScreen },
-  { id: 'bmi', label: 'BMI Calculator', icon: Calculator, pathSuffix: 'bmi', screen: BMICalculatorScreen },
   { id: 'address', label: 'Address Management', icon: MapPin, pathSuffix: 'address', screen: AddressManagementScreen },
-  { id: 'pricing', label: 'Pricing Plans', icon: CreditCard, pathSuffix: 'pricing', screen: PricingPlansScreen },
-  { id: 'nutrition', label: 'Nutrition Info', icon: Leaf, pathSuffix: 'nutrition', screen: NutritionInfoScreen },
-  { id: 'blog', label: 'Health Blog', icon: BookOpen, pathSuffix: 'blog', screen: BlogScreen }, // UPDATED: Add the new link
+  { id: 'blog', label: 'Health Blog', icon: BookOpen, pathSuffix: 'blog', screen: BlogScreen },
   { id: 'help', label: 'Help & Support', icon: HelpCircle, pathSuffix: 'help', screen: HelpSupportScreen },
 ];
 
@@ -120,4 +113,4 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ subPath, navigateT
   );
 };
 
-// --- END OF FILE: screens/ProfileScreen.tsx ---
+// --- END OF FILE screens/ProfileScreen.tsx ---

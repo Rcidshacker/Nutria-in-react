@@ -1,105 +1,77 @@
-// --- START OF FILE App.tsx ---
+// --- START OF FILE: App.tsx ---
 
-import React, { useState, useEffect, useCallback } from 'react';
-// FIX: Removed unused 'useTheme' import
+import React, { useState } from 'react'; // FIX: Imported useState
 import { ThemeProvider } from './contexts/ThemeContext';
 import { SignUpFormProvider, useSignUpForm } from './contexts/SignUpContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { SignInScreen } from './screens/SignInScreen';
 import { SignUpScreen } from './screens/SignUpScreen';
 import { MainAppLayout } from './layouts/MainAppLayout';
-// FIX: Removed unused 'Theme' type import
-import { AppRoute } from './types'; 
-// FIX: Removed unused constant import
-// import { PRIMARY_COLOR_CLASS } from './constants'; 
+import { Loader } from 'lucide-react';
+// FIX: Removed unused User import
 
-const AppContent: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const getInitialRoute = () => {
-    const hash = window.location.hash;
-    if (hash && hash !== '#') return hash;
-    return '#/signin';
-  };
-  const [currentRoute, setCurrentRoute] = useState<AppRoute>(getInitialRoute());
-  
+const AppRouter: React.FC = () => {
+  const { isAuthenticated, user, login, logout, isLoading } = useAuth();
   const { resetFormData } = useSignUpForm();
-
-  const navigateTo = useCallback((route: AppRoute) => {
-    setCurrentRoute(route);
-    if (window.location.hash !== route) {
-      window.location.hash = route;
-    }
-  }, []);
-
-  useEffect(() => {
-    const handleHashChange = () => {
-      const newHash = window.location.hash;
-      if (newHash && newHash !== currentRoute) {
-        setCurrentRoute(newHash);
-      } else if (!newHash || newHash === '#') {
-        setCurrentRoute(isAuthenticated ? '#/app/home' : '#/signin');
-      }
-    };
-    window.addEventListener('hashchange', handleHashChange);
-
-    let targetRoute = currentRoute; 
-    if (isAuthenticated) {
-      if (!currentRoute.startsWith('#/app')) {
-        targetRoute = '#/app/home';
-      }
-    } else {
-      if (currentRoute.startsWith('#/app')) {
-        targetRoute = '#/signin';
-      } else if (currentRoute !== '#/signup' && currentRoute !== '#/signin') {
-        targetRoute = '#/signin';
-      }
-    }
-    if (targetRoute !== currentRoute) {
-      navigateTo(targetRoute);
-    }
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, [isAuthenticated, currentRoute, navigateTo]);
-
-  const handleSignInSuccess = () => {
-    setIsAuthenticated(true);
-  };
-
-  const handleSignUpComplete = () => {
-    setIsAuthenticated(true);
-  };
   
-  const handleSignOut = () => {
-    resetFormData();
-    setIsAuthenticated(false);
-  };
+  const [showSignUp, setShowSignUp] = useState(false);
 
-  if (!isAuthenticated) {
-    if (currentRoute === '#/signup') {
-      return <SignUpScreen 
-                onSignUpComplete={handleSignUpComplete} 
-                onNavigateToSignIn={() => navigateTo('#/signin')} 
-             />;
-    }
-    return <SignInScreen 
-              onNavigateToSignUp={() => navigateTo('#/signup')} 
-              onSignInSuccess={handleSignInSuccess} 
-           />;
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader className="w-12 h-12 animate-spin text-melon-500" />
+      </div>
+    );
   }
 
-  return <MainAppLayout currentRoute={currentRoute} onSignOut={handleSignOut} navigateTo={navigateTo} />;
+  if (isAuthenticated && user) {
+    return (
+      <MainAppLayout
+        key={user.id}
+        user={user} 
+        onSignOut={() => {
+          resetFormData();
+          logout();
+        }}
+      />
+    );
+  }
+  
+  if (showSignUp) {
+    return (
+      <SignUpScreen 
+        onSignUpComplete={async () => {
+          // After signing up, we need to log in to get the user data
+          // A better UX might automatically log them in, but for now, we'll send them to sign in.
+          setShowSignUp(false);
+        }} 
+        onNavigateToSignIn={() => setShowSignUp(false)} 
+      />
+    );
+  }
+
+  return (
+    <SignInScreen
+      onSignIn={login}
+      onNavigateToSignUp={() => setShowSignUp(true)}
+    />
+  );
 };
 
 const App: React.FC = () => {
   return (
-    <ThemeProvider>
-      <SignUpFormProvider>
-        <div className="bg-peach-100 dark:bg-cocoa-900 text-cocoa-800 dark:text-peach-100 min-h-screen transition-colors duration-300">
-          <AppContent />
-        </div>
-      </SignUpFormProvider>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <SignUpFormProvider>
+          <div className="bg-peach-50 dark:bg-cocoa-900 text-cocoa-800 dark:text-peach-100 min-h-screen transition-colors duration-300">
+            <AppRouter />
+          </div>
+        </SignUpFormProvider>
+      </ThemeProvider>
+    </AuthProvider>
   );
 };
 
 export default App;
 
-// --- END OF FILE App.tsx ---
+// --- END OF FILE: App.tsx ---

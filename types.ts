@@ -1,3 +1,17 @@
+// ADD THIS NEW INTERFACE AT THE TOP
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  age: number;
+  gender: string;
+  height: number;
+  weight: number;
+  activity_level: string;
+  diet: string;
+  health_condition?: string;
+}
+
 export enum Theme {
   LIGHT = 'light',
   DARK = 'dark'

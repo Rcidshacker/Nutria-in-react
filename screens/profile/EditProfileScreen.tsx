@@ -1,7 +1,11 @@
+// --- START OF FILE screens/profile/EditProfileScreen.tsx ---
+
 import React, { useState, useEffect } from 'react';
+// FIX: Corrected import paths from ../../ to ../../components/ etc.
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { useSignUpForm } from '../../contexts/SignUpContext'; 
+import { motion } from 'framer-motion';
 
 export const EditProfileScreen: React.FC = () => {
   const { formData, updateFormData } = useSignUpForm(); 
@@ -9,9 +13,8 @@ export const EditProfileScreen: React.FC = () => {
   const [isModified, setIsModified] = useState(false);
 
   useEffect(() => {
-    // Initialize local form data when component mounts or formData from context changes
     setLocalFormData(formData);
-    setIsModified(false); // Reset modification status on new data
+    setIsModified(false);
   }, [formData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,14 +24,19 @@ export const EditProfileScreen: React.FC = () => {
   };
 
   const handleSave = () => {
-    updateFormData(localFormData); // Update the context
+    updateFormData(localFormData);
     alert('Profile changes saved!');
     console.log('Updated Profile Data:', localFormData);
-    setIsModified(false); // Reset modification status after save
+    setIsModified(false);
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md"
+    >
       <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6">Edit Your Profile</h2>
       
       <Input
@@ -71,6 +79,8 @@ export const EditProfileScreen: React.FC = () => {
       <Button onClick={handleSave} fullWidth className="mt-6" disabled={!isModified}>
         Save Changes
       </Button>
-    </div>
+    </motion.div>
   );
 };
+
+// --- END OF FILE screens/profile/EditProfileScreen.tsx ---
