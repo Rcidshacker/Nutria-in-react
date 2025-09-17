@@ -9,11 +9,11 @@ export default defineConfig(({ mode }) => {
     return {
         server: {
             proxy: {
-                '/api/v1': {
-                    target: 'http://127.0.0.1:8000',
+                // This will forward any request starting with /api to your backend
+                '/api': {
+                    target: 'http://192.168.0.115:8000', // Changed from 127.0.0.1
                     changeOrigin: true,
                     secure: false,
-                    ws: true,
                 },
             },
         },

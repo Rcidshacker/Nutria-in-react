@@ -1,8 +1,5 @@
-// --- START OF FILE: services/API_URL.ts ---
-
-// The full base URL for all API requests, including the version prefix.
-const API_URL = '/api/v1'; 
+const API_URL = '/api/v1';
+// --- ADD THIS LINE FOR DEBUGGING ---
+console.log("API_URL being used:", API_URL);
 
 export default API_URL;
-
-// --- END OF FILE: services/API_URL.ts ---

@@ -1,14 +1,18 @@
-// --- START OF FILE: services/api.ts ---
+// src/services/api.ts
 
 import axios from "axios";
-import API_URL from "./API_URL";
-import { SignUpFormData, User } from "../types"; // Make sure User is imported
+import API_URL from "./API_URL"; // This now imports the corrected, relative URL
+import { SignUpFormData, User } from "../types";
 
+// This Axios instance is now correctly configured with the relative baseURL '/api/v1'.
+// All API calls made with this instance (e.g., api.post('/auth/token')) will now
+// correctly resolve to '/api/v1/auth/token' and be handled by the Vite proxy.
 const api = axios.create({
-    baseURL: '/api/v1',
+    baseURL: API_URL,
     headers: { "Content-Type": "application/json" },
 });
 
+// Add an interceptor to include the Authorization token in every request.
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("token");
@@ -20,6 +24,7 @@ api.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
+// Helper functions to map frontend values to backend-expected values.
 const mapActivityLevel = (level: string): string => {
     const mapping: { [key: string]: string } = { 'sedentary': 'S', 'light': 'LA', 'moderate': 'MA', 'active': 'VA', 'extra-active': 'SA' };
     return mapping[level] || 'S';
@@ -37,6 +42,7 @@ const mapRegion = (region: string): string => {
     return mapping[region] || 'North';
 };
 
+// Authentication related API calls.
 export const authService = {
     async signUp(userData: SignUpFormData) {
         try {
@@ -70,8 +76,11 @@ export const authService = {
             if (response.data.access_token) { localStorage.setItem("token", response.data.access_token); }
             return response.data;
         } catch (error) {
-            if (axios.isAxiosError(error)) { console.error("Login error:", error.response?.data || error.message); } 
-            else { console.error("An unexpected error occurred:", error); }
+            if (axios.isAxiosError(error)) {
+                console.error("Login error response:", error.response?.data || "No response data");
+            } else {
+                console.error("Login setup error:", error);
+            }
             throw error;
         }
     },
@@ -91,10 +100,8 @@ export const authService = {
         localStorage.removeItem("token");
     },
     
-    // --- ADD THIS NEW FUNCTION ---
     async updateCurrentUser(updateData: Partial<User>) {
         try {
-            // The backend expects number types for certain fields
             const payload = {
                 ...updateData,
                 age: updateData.age ? Number(updateData.age) : undefined,
@@ -114,7 +121,7 @@ export const authService = {
     },
 };
 
-// --- ADD THIS NEW SERVICE OBJECT ---
+// Diet Plan related API calls.
 export const dietPlanService = {
     async getMyPlan() {
         try {
@@ -123,10 +130,8 @@ export const dietPlanService = {
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error) && error.response?.status === 404) {
-                // This is not a real error, it just means the user has no plan yet.
                 return null;
             }
-            // For all other errors, we re-throw them.
             if (axios.isAxiosError(error)) { console.error("Get Diet Plan error:", error.response?.data || error.message); }
             else { console.error("An unexpected error occurred:", error); }
             throw error;
@@ -135,8 +140,6 @@ export const dietPlanService = {
 
     async generatePlan() {
         try {
-            // The backend's /generate endpoint doesn't require a body,
-            // as it uses the current user's data from the auth token.
             const response = await api.post("/diet-plans/generate");
             return response.data;
         } catch (error) {
@@ -146,4 +149,26 @@ export const dietPlanService = {
         }
     },
 };
-// --- END OF FILE: services/api.ts ---
+
+// Medical Report related API calls.
+export const medicalReportService = {
+    async extractMedicalReportData(file: File) {
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await api.post("/medical-reports/extract", formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error("Medical report extraction error:", error.response?.data || error.message);
+                throw error.response?.data || new Error("Failed to extract medical report data.");
+            } else {
+                console.error("An unexpected error occurred during medical report extraction:", error);
+                throw new Error("An unexpected error occurred during medical report extraction.");
+            }
+        }
+    },
+};
